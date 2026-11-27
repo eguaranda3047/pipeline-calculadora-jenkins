@@ -1,5 +1,6 @@
 
-name: Canal agregado de acciones de GitHub
+name: Pipeline CI - Calculadora
+run-name: Canal agregado de acciones de GitHub
 
 on:
   push:
