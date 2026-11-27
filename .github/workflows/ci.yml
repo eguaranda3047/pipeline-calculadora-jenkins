@@ -1,5 +1,5 @@
 
-name: Pipeline CI - Calculadora
+name: Canal agregado de acciones de GitHub
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 
 jobs:
   pipeline:
+    name: Pipeline
     runs-on: ubuntu-latest
 
     defaults:
@@ -24,22 +25,22 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: 3. Instalar dependencias
+      - name: Instalar dependencias
         run: pip install -r requirements.txt
 
-      - name: 4. Resultado de las pruebas automatizadas
+      - name: 3. Ejecutar pruebas
         run: python -m unittest -v
 
-      - name: 5. Construir proyecto
+      - name: 4. Construir proyecto
         run: python -m compileall -q .
 
-      - name: 6. Crear paquete
-        run: zip calculadora.zip calculadora.py requirements.txt
+      - name: Crear paquete
+        run: zip calculadora.zip calculadora.py
 
-      - name: 7. Simular despliegue
+      - name: 5. Simular despliegue
         run: echo "Despliegue realizado correctamente en ambiente de pruebas"
 
-      - name: 8. Paquete construido y guardado como artefacto
+      - name: Paquete construido y guardado como artefacto
         uses: actions/upload-artifact@v4
         with:
           name: paquete-calculadora
