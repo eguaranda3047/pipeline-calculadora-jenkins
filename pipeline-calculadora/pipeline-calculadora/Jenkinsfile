@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    options {
+        skipDefaultCheckout(true)
+    }
+
+    stages {
+        stage('1. Clonar repositorio') {
+            steps {
+                checkout scm
+                echo 'Repositorio clonado correctamente.'
+            }
+        }
+
+        stage('2. Instalar dependencias') {
+            steps {
+                sh '''
+                    python3 -m venv .venv
+                    .venv/bin/pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('3. Ejecutar pruebas') {
+            steps {
+                sh '.venv/bin/python -m unittest -v'
+            }
+        }
+
+        stage('4. Construir proyecto') {
+            steps {
+                sh '''
+                    .venv/bin/python -m compileall -q calculadora.py test_calculadora.py
+                    zip calculadora.zip calculadora.py requirements.txt
+                '''
+            }
+        }
+
+        stage('5. Simular despliegue') {
+            steps {
+                echo 'Despliegue realizado correctamente en ambiente de pruebas.'
+            }
+        }
+    }
+
+    post {
+        success {
+            archiveArtifacts artifacts: 'calculadora.zip'
+            echo 'Pipeline ejecutado correctamente.'
+        }
+
+        failure {
+            echo 'El pipeline presento un error.'
+        }
+    }
+}
