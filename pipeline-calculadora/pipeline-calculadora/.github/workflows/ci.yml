@@ -11,6 +11,10 @@ jobs:
   pipeline:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./pipeline-calculadora/pipeline-calculadora
+
     steps:
       - name: 1. Clonar repositorio
         uses: actions/checkout@v4
@@ -20,22 +24,23 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Instalar dependencias
+      - name: 3. Instalar dependencias
         run: pip install -r requirements.txt
 
-      - name: 3. Ejecutar pruebas
+      - name: 4. Resultado de las pruebas automatizadas
         run: python -m unittest -v
 
-      - name: 4. Construir proyecto
+      - name: 5. Construir proyecto
         run: python -m compileall -q .
-        
-      - name: Crear paquete
-        run: zip calculadora.zip calculadora.py
 
-      - name: 5. Simular despliegue
+      - name: 6. Crear paquete
+        run: zip calculadora.zip calculadora.py requirements.txt
+
+      - name: 7. Simular despliegue
         run: echo "Despliegue realizado correctamente en ambiente de pruebas"
-      - name: Guardar paquete construido
+
+      - name: 8. Paquete construido y guardado como artefacto
         uses: actions/upload-artifact@v4
         with:
           name: paquete-calculadora
-          path: calculadora.zip
+          path: ./pipeline-calculadora/pipeline-calculadora/calculadora.zip
